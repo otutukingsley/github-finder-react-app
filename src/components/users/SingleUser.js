@@ -1,48 +1,36 @@
-import React, { Component, Fragment } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import Spinner from '../layouts/Spinner'
 import PropTypes from 'prop-types';
 import  Repos  from '../repos/Repos';
 import { Link } from 'react-router-dom'
 
-class SingleUser extends Component {
-    componentDidMount () {
-        this.props.getUser(this.props.match.params.login)
-        this.props.getUserRepos(this.props.match.params.login)
-    }
-
-    
-    static propsTypes = {
-        getUser : PropTypes.func.isRequired,
-        getUserRepos : PropTypes.func.isRequired,
-        loading: PropTypes.func.isRequired,
-        user: PropTypes.object.isRequired,
-        repo: PropTypes.array.isRequired,
-    }
+const SingleUser = ({ user, loading, getUser, getUserRepos, repo, match}) => {
+    useEffect(() => {
+    getUser(match.params.login)
+    getUserRepos(match.params.login)
+    // eslint-disable-next-line
+    }, [])
 
 
-    render() {
-        const {
-               name, 
-               avatar_url,
-               location,
-               bio,
-               blog,
-               login,
-               html_url,
-               followers,
-               following,
-               public_repos,
-               public_gists,
-               company,
-               hireable
-            } = this.props.user
-
-        const {loading, repo } = this.props
-  
+    const {
+         name, 
+         avatar_url,
+         location,
+         bio,
+         blog,
+         login,
+         html_url,
+         followers,
+         following,
+         public_repos,
+         public_gists,
+         company,
+         hireable
+    } = user
 
         if(loading) return <Spinner />
 
-        return ( 
+    return ( 
             <Fragment> 
                 <Link to='/' className='btn btn-light'>Back</Link>
                 Hireable:{' '}
@@ -99,8 +87,15 @@ class SingleUser extends Component {
                 </div>
                 <Repos repos={repo}/>
             </Fragment>
-            )
-    }
+    )
+}
+
+SingleUser.propsTypes = {
+    getUser : PropTypes.func.isRequired,
+    getUserRepos : PropTypes.func.isRequired,
+    loading: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
+    repo: PropTypes.array.isRequired,
 }
 
 export default SingleUser
