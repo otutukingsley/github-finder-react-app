@@ -1,13 +1,18 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useContext } from 'react'
 import Spinner from '../layouts/Spinner'
-import PropTypes from 'prop-types';
+import githubContext from '../context/github/githubContext';
 import  Repos  from '../repos/Repos';
 import { Link } from 'react-router-dom'
 
-const SingleUser = ({ user, loading, getUser, getUserRepos, repo, match}) => {
+const SingleUser = ({match}) => {
+
+    const context = useContext(githubContext)
+
+    const { loading, getUser, user, getRepos} = context
+
     useEffect(() => {
     getUser(match.params.login)
-    getUserRepos(match.params.login)
+    getRepos(match.params.login)
     // eslint-disable-next-line
     }, [])
 
@@ -85,17 +90,10 @@ const SingleUser = ({ user, loading, getUser, getUserRepos, repo, match}) => {
                     <div className="badge badge-dark">Public Repos: {public_repos}</div>
                     <div className="badge badge-success">Public Gists: {public_gists}</div>
                 </div>
-                <Repos repos={repo}/>
+                <Repos/>
             </Fragment>
     )
 }
 
-SingleUser.propsTypes = {
-    getUser : PropTypes.func.isRequired,
-    getUserRepos : PropTypes.func.isRequired,
-    loading: PropTypes.func.isRequired,
-    user: PropTypes.object.isRequired,
-    repo: PropTypes.array.isRequired,
-}
 
 export default SingleUser
